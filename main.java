@@ -1,103 +1,156 @@
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import java.awt.*;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main extends JPanel {
     private JButton boton_confirmar;
     private JTextField texto_id;
     private JLabel label_numerodocumento;
-    private JTextField texto_respuesta;
+    private JLabel label_resultado;
     private JLabel label_edad;
-
-    // Simulación de una base de datos de identificaciones y edades
-    private Map<String, Integer> baseDeDatos = new HashMap<>();
+    private JLabel verificarper;
+    private JLabel preguntacapacitado;
+    private JTextField estacapacitado;
+    private JTextField separador;
+    private JTextField docusuario;
+    private JLabel verifisuauri;
+    private JLabel numerodoc;
+    private JLabel nombre;
+    private JTextField nombreusuario;
+    private JButton confirmar;
+    private JLabel notif;
+    private JTextField sep;
+    private JLabel notificando;
+    private JLabel informa;
 
     public Main() {
-        
-        boton_confirmar = new JButton("Confirmar");
-        texto_id = new JTextField(5);
-        label_numerodocumento = new JLabel("Número de documento:");
-        texto_respuesta = new JTextField(5);
-        label_edad = new JLabel("Edad:");
+        // Set layout
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
 
-        boton_confirmar.setToolTipText("Presione para confirmar el numero de identidad y buscarlo");
-        label_numerodocumento.setToolTipText("Ingrese el numero de documento:");
-        texto_respuesta.setEnabled(false);
+        // Add components
+        // Número de documento
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        add(label_numerodocumento = new JLabel("Número de documento:"), constraints);
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        add(texto_id = new JTextField(10), constraints);
 
-        setPreferredSize(new Dimension(307, 132));
-        setLayout(null);
+        // Botón confirmar
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        add(boton_confirmar = new JButton("Confirmar"), constraints);
 
-        add(boton_confirmar);
-        add(texto_id);
-        add(label_numerodocumento);
-        add(texto_respuesta);
-        add(label_edad);
+        // Resultado
+        constraints.gridx = 0;constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        add(label_resultado = new JLabel(), constraints);
 
-      
-        boton_confirmar.setBounds(180, 55, 100, 20);
-        texto_id.setBounds(180, 15, 100, 25);
-        label_numerodocumento.setBounds(15, 15, 139, 25);
-        texto_respuesta.setBounds(180, 90, 100, 25);
-        label_edad.setBounds(115, 90, 36, 25);
+        // Verificación personal
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.gridwidth = 1;
+        add(verificarper = new JLabel("Verificación personal"), constraints);
 
-        // Generar identificaciones aleatorias para simular la base de datos
-        generarBaseDeDatos();
+        // Pregunta capacitado
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        add(preguntacapacitado = new JLabel("¿Está capacitado?"), constraints);
 
-        // Add action listener to the button
-        boton_confirmar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String id = texto_id.getText();
+        // Capacitado
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        add(estacapacitado = new JTextField(5), constraints);
 
-                // Verificar si la identificación existe en la base de datos
-                if (baseDeDatos.containsKey(id)) {
-                    int age = baseDeDatos.get(id);
+        // Verificación usuario
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        add(verifisuauri = new JLabel("Verificación usuario"), constraints);
 
-                    // Verificar si la persona es mayor de edad
+        // Número de documento
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        add(numerodoc = new JLabel("Número de documento:"), constraints);
+
+        // Nombre
+        constraints.gridx = 1;
+        constraints.gridy = 6;
+        add(nombre = new JLabel("Nombre:"), constraints);
+
+        // Documento usuario
+        constraints.gridx = 0;
+        constraints.gridy = 7;
+        add(docusuario = new JTextField(5), constraints);
+
+        // Nombre usuario
+        constraints.gridx = 1;
+        constraints.gridy = 7;
+        add(nombreusuario = new JTextField(5), constraints);
+
+        // Confirmar
+        constraints.gridx = 0;
+        constraints.gridy = 8;
+        constraints.gridwidth = 2;
+        add(confirmar = new JButton("Confirmar"), constraints);
+
+        // Notificar
+        constraints.gridx = 0;
+        constraints.gridy = 9;
+constraints.gridwidth = 1;
+        add(notif = new JLabel("Notificar"), constraints);
+
+        // Separador
+        constraints.gridx = 1;
+        constraints.gridy = 9;
+        add(sep = new JTextField(5), constraints);
+
+        // Notificando
+        constraints.gridx = 0;
+        constraints.gridy = 10;
+        constraints.gridwidth = 2;
+        add(notificando = new JLabel("Si es menor de edad:"), constraints);
+
+        // Información
+        constraints.gridx = 0;
+        constraints.gridy = 11;
+        constraints.gridwidth = 2;
+        add(informa = new JLabel("Notificando..."), constraints);
+
+        // Asignar IDs específicas con valores definidos
+
+        // Asignar edades específicas para IDs seleccionadas
+        Map<String, Integer> idAges = new HashMap<>();
+        idAges.put("1034989237", 18);
+        idAges.put("2034989236", 25);
+        idAges.put("3034989235", 32);
+
+        // ActionListener para el botón confirmar
+        boton_confirmar.addActionListener(e -> {
+            String id = texto_id.getText();
+            boolean isValidId = id.matches("\\d{9}");
+            if (isValidId) {
+                if (idAges.containsKey(id)) {
+                    int age = idAges.get(id);
                     if (age >= 18) {
-                        texto_respuesta.setText("Acceso permitido");
+                        label_resultado.setText("Es mayor de edad");
                     } else {
-                        texto_respuesta.setText("Acceso denegado (menor de edad)");
+                        label_resultado.setText("Es menor de edad");
                     }
                 } else {
-                    texto_respuesta.setText("Identificación no válida");
+                    label_resultado.setText("No hay información disponible para esta ID");
                 }
+            } else {
+                label_resultado.setText("ID inválida");
             }
         });
-    }
-
-    // generar una base de datos simulada con identificaciones aleatorias y edades
-    private void generarBaseDeDatos() {
-        Random random = new Random();
-        for (int i = 0; i < 100; i++) {
-            String id = generarIdentificacionAleatoria();
-            int age = random.nextInt(100); // Edad aleatoria entre 0 y 99
-            baseDeDatos.put(id, age);
-        }
-    }
-
-    // Método para generar una identificación aleatoria simulada
-    private String generarIdentificacionAleatoria() {
-        Random random = new Random();
-        StringBuilder idBuilder = new StringBuilder();
-        for (int i = 0; i < 10; i++) { // Longitud de la identificación
-            idBuilder.append(random.nextInt(4)); // Dígitos aleatorios
-        }
-        return idBuilder.toString();
-    }
+}
 
     public static void main(String[] args) {
-      
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
-
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("Main");
+        JFrame frame = new JFrame("Entrega2codigo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new Main());
         frame.pack();
